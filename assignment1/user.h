@@ -1,6 +1,7 @@
-// Change made
+
 struct stat;
 
+// Change made
 #include "types.h"
 
 
