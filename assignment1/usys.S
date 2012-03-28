@@ -30,4 +30,4 @@ SYSCALL(sbrk)
 SYSCALL(sleep)
 SYSCALL(uptime)
 // Change made
-SYSCALL(signal)
+//SYSCALL(signal)
