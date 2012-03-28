@@ -1,4 +1,9 @@
+// Change made
 struct stat;
+
+#include "types.h"
+
+
 
 // system calls
 int fork(void);
@@ -22,6 +27,8 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
+// Change made
+int signal(int signum, sighandler_t handler);
 
 // ulib.c
 int stat(char*, struct stat*);

@@ -68,6 +68,8 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
+  int signal;                  // Pending signals
+  void (*sigfunc[32])(void);       // pointers to the fuction whos signal is invoked
 };
 
 // Process memory is laid out contiguously, low addresses first:
