@@ -12,6 +12,9 @@
 #define BACK  5
 
 #define MAXARGS 10
+#define PWD_SIZE 256 // Change made
+
+char curdir[PWD_SIZE]; // Change made
 
 struct cmd {
   int type;
@@ -133,13 +136,16 @@ runcmd(struct cmd *cmd)
 int
 getcmd(char *buf, int nbuf)
 {
-  printf(2, "/> ");
+  printf(2, "%s> ", curdir);
   memset(buf, 0, nbuf);
   gets(buf, nbuf);
   if(buf[0] == 0) // EOF
     return -1;
   return 0;
 }
+
+// Change made - added declaration
+int chdirstr(char*);
 
 int
 main(void)
@@ -155,6 +161,7 @@ main(void)
     }
   }
   
+  strcpy(curdir, "/"); // Change made
   // Read and run input commands.
   while(getcmd(buf, sizeof(buf)) >= 0){
     if(buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' '){
@@ -163,6 +170,8 @@ main(void)
       buf[strlen(buf)-1] = 0;  // chop \n
       if(chdir(buf+3) < 0)
         printf(2, "cannot cd %s\n", buf+3);
+      else
+        chdirstr(buf+3); // Change made
       continue;
     }
     if(fork1() == 0)
@@ -492,3 +501,68 @@ nulterminate(struct cmd *cmd)
   }
   return cmd;
 }
+
+// Change made ---------- added functions below --------------
+
+int
+chdirstr(char* cdstr) {
+  char str[PWD_SIZE];
+  char tmp[PWD_SIZE];
+  int i=0;
+  int j=0;
+  int len;
+  
+  // Check reletivity to root
+  if (cdstr[0] == '/') {
+    cdstr++;
+    strcpy(curdir, "/");
+  }
+  
+  //Copy received string
+  strcpy(str, cdstr);
+  
+  //Append slash at end of curdir
+  len = strlen(curdir);
+  if (len < PWD_SIZE && curdir[len-1] != '/') {
+    curdir[len] = '/';
+    curdir[++len] = '\0';
+  }
+  
+  //Append slash at end of str
+  len = strlen(str);
+  if (len < PWD_SIZE && str[len-1] != '/') {
+    str[len] = '/';
+    str[++len] = '\0';
+  }
+  
+  //Split str on slashes
+  while(i<len) {
+    tmp[j] = str[i];
+    i++;
+    j++;
+    if (str[i-1] == '/') {
+      tmp[j] = '\0';
+      j=0;
+      
+      //Change curdir string one step at a time
+      if (strcmp(tmp, "../") == 0) {
+        int k = strlen(curdir)-1;
+        while (k > 0 && curdir[k-1] != '/') k--;
+        curdir[k] = '\0';
+      } else if (strcmp(tmp, "./") != 0) {
+        strcpy(curdir + strlen(curdir), tmp);
+      }
+      //printf("%s\n", curdir); 
+    }
+  }
+  
+  //Remove last slash if not in root
+  len = strlen(curdir);
+  if (len > 1) {
+    curdir[len-1] = '\0';
+  }
+  
+  return 1;
+}
+
+

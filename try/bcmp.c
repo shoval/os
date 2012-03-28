@@ -6,7 +6,7 @@
 char curdir[PWD_SIZE];
 
 int main(int argc, char *argv[]) {
-  sprintf(curdir, "/bla/grr");
+  strcpy(curdir, "/bla/grr");
   printf("%s\n", curdir);
   if (argc > 1) {
     chdirstr(argv[1]);
@@ -26,11 +26,11 @@ int chdirstr(char* cdstr) {
   // Check reletivity to root
   if (cdstr[0] == '/') {
     cdstr++;
-    sprintf(curdir, "/");
+    strcpy(curdir, "/");
   }
   
   //Copy received string
-  sprintf(str, "%s", cdstr);
+  strcpy(str, cdstr);
   
   //Append slash at end of curdir
   len = strlen(curdir);
@@ -48,25 +48,23 @@ int chdirstr(char* cdstr) {
   
   //Split str on slashes
   while(i<len) {
-    if (str[i] == '/') {
-      i++;
+    tmp[j] = str[i];
+    i++;
+    j++;
+    if (str[i-1] == '/') {
       tmp[j] = '\0';
       j=0;
       
       //Change curdir string one step at a time
-      if (strcmp(tmp, "..") == 0) {
+      if (strcmp(tmp, "../") == 0) {
         int k = strlen(curdir)-1;
         while (k > 0 && curdir[k-1] != '/') k--;
         curdir[k] = '\0';
-      } else if (strcmp(tmp, ".") != 0) {
-        sprintf(curdir + strlen(curdir), "%s/", tmp);
+      } else if (strcmp(tmp, "./") != 0) {
+        strcpy(curdir + strlen(curdir), tmp);
       }
       printf("%s\n", curdir); 
-      continue;
     }
-    tmp[j] = str[i];
-    i++;
-    j++;
   }
   
   //Remove last slash if not in root
