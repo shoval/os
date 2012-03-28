@@ -1,7 +1,9 @@
 // Change made
 struct stat;
 
-typedef sighandler_t void (*sighandler_t)(void);
+#include "types.h"
+
+
 
 // system calls
 int fork(void);
