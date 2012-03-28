@@ -4,4 +4,4 @@ typedef unsigned char  uchar;
 typedef uint pde_t;
 
 // Change made
-typedef void (*sighandler_t)(void);
+//typedef void (*sighandler_t)(void);
