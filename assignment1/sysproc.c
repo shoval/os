@@ -88,3 +88,22 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+// Change made
+int 
+sys_signal(int signum, sighandler_t handler)
+{
+  proc->sigfunc[signum] = handler;
+  //TODO: verify best solution
+  if(proc->sigfunc[signum] == handler)
+    return 0;
+  else 
+    return -1;
+}
+int
+sys_sigsend(int pid, int signum)
+{
+  //TODO: implement
+  
+  return 0;
+}

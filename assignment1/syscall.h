@@ -22,4 +22,6 @@
 #define SYS_mkdir  20
 #define SYS_close  21
 // Change made
-//#define SYS_signal  22
+#define SYS_signal  22
+#define SYS_sigsend 23
+
