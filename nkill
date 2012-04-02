@@ -1,4 +1,4 @@
 #!/bin/cat
 # This is a comment!
 echo killing $1
-ps -a | grep $1 | grep -Po "[0-9]{4}" | xargs kill
+ps -a | grep $1 | grep -Po "[0-9]{3,6}" | xargs kill
