@@ -116,6 +116,11 @@ void            userinit(void);
 int             wait(void);
 void            wakeup(void*);
 void            yield(void);
+// Change made
+//TODO: (is this the way?) 
+int             sigsend(int, int);
+int             signal(int, void (*sighandler_t)(void));
+
 
 // swtch.S
 void            swtch(struct context**, struct context*);

@@ -91,19 +91,30 @@ sys_uptime(void)
 
 // Change made
 int 
-sys_signal(int signum, sighandler_t handler)
+sys_signal(void)
 {
-  proc->sigfunc[signum] = handler;
-  //TODO: verify best solution
-  if(proc->sigfunc[signum] == handler)
-    return 0;
-  else 
+  int signum;
+  sighandler_t handler;
+  
+  if(argint(0, &signum) < 0)
     return -1;
+  if(argint(1, (int*)&handler) < 0)
+    return -1;
+    
+  
+  return signal(signum, handler);
+
 }
 int
-sys_sigsend(int pid, int signum)
+sys_sigsend(void)
 {
-  //TODO: implement
+  int pid;
+  int signum;
   
-  return 0;
+  if(argint(0, &pid) < 0)
+    return -1;
+  if(argint(1, &signum) < 0)
+    return -1;
+
+  return sigsend(pid, signum);
 }

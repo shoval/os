@@ -20,6 +20,10 @@ extern void trapret(void);
 
 static void wakeup1(void *chan);
 
+// Change made
+void checkRecivedSignals();
+
+
 void
 pinit(void)
 {
@@ -292,6 +296,10 @@ scheduler(void)
       proc = p;
       switchuvm(p);
       p->state = RUNNING;
+      
+      // Change made
+      checkRecivedSignals();
+      
       swtch(&cpu->scheduler, proc->context);
       switchkvm();
 
@@ -473,4 +481,51 @@ procdump(void)
   }
 }
 
+// Change made
+
+void 
+checkRecivedSignals(){
+    int i;
+    for (i=0;i<32;i++){
+        if (proc->signal & (1 << i)){
+            register_handler(proc->sigfunc[i]);
+            proc->signal &= ~(1 << i);
+            //TODO: can process multiple signals?
+            break;
+        }
+    }
+}
+
+
+int 
+signal(int signum, sighandler_t handler)
+{
+  proc->sigfunc[signum] = handler;
+  //TODO: verify best solution
+  if(proc->sigfunc[signum] == handler)
+    return 0;
+  else 
+    return -1;
+}
+int
+sigsend(int pid, int signum)
+{
+  // code from the kill function
+   struct proc *p;
+
+  acquire(&ptable.lock);
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->pid == pid){
+      p->signal |= (1 << signum);
+      //TODO: Wake process from sleep is necessary?
+      //if(p->state == SLEEPING)
+      //  p->state = RUNNABLE;
+      release(&ptable.lock);
+      return 0;
+    }
+  }
+  release(&ptable.lock);
+  return -1;
+
+}
 

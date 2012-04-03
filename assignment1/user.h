@@ -29,8 +29,8 @@ char* sbrk(int);
 int sleep(int);
 int uptime(void);
 // Change made
-int signal(int signum, sighandler_t handler);
-int sigsend(int pid, int signum);
+int signal(int, sighandler_t);
+int sigsend(int, int);
 
 
 // ulib.c
