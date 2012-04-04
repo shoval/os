@@ -24,7 +24,7 @@ void ouch() {
 int
 main(int argc, char *argv[])
 {
-  char numstr[1];
+  char numstr[10];
   int childnum, signum, i;
   int child[TOTCHILD];
   
@@ -52,12 +52,14 @@ main(int argc, char *argv[])
   for(; ;) {
     // Receive child num and signal, and send the signal to that child
     printf(1, "Enter a child id (0 - 2): ");
-    gets(numstr, 1);
+    memset(numstr, 0, 10); // Clean memory?
+    gets(numstr, 10);
     childnum = atoi(numstr);
     if (childnum < 0 || childnum >= TOTCHILD) // Verify 0-2
       continue; // If not, ask again
     printf(1, "Which signal to send: ");
-    gets(numstr, 1);
+    memset(numstr, 0, 10); // Clean memory?
+    gets(numstr, 10);
     signum = atoi(numstr);
     
     sigsend(child[childnum], signum); // Send the signal
